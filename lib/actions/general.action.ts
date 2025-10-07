@@ -113,11 +113,19 @@ export async function getInterviewsByUserId(
   const interviews = await db
     .collection("interviews")
     .where("userId", "==", userId)
-    .orderBy("createdAt", "desc")
     .get();
 
-  return interviews.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data(),
-  })) as Interview[];
+  // Sort by createdAt in memory instead of using orderBy
+  const sortedInterviews = interviews.docs
+    .map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }))
+    .sort((a, b) => {
+      const aTime = new Date((a as any).createdAt).getTime();
+      const bTime = new Date((b as any).createdAt).getTime();
+      return bTime - aTime; // Descending order (newest first)
+    });
+
+  return sortedInterviews as Interview[];
 }
