@@ -97,7 +97,6 @@ export const mappings = {
   "aws amplify": "amplify",
 };
 
-
 export const interviewer: CreateAssistantDTO = {
   name: "Interviewer",
   firstMessage:
@@ -189,7 +188,6 @@ export const feedbackSchema = z.object({
   areasForImprovement: z.array(z.string()),
   finalAssessment: z.string(),
 });
-
 
 export const interviewCovers = [
   "/adobe.png",
