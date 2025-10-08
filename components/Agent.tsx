@@ -129,7 +129,10 @@ const Agent = ({
           throw new Error("VAPI Workflow ID is not configured");
         }
         
-        await vapi.start(workflowId, {
+        console.log("Attempting to start VAPI call with workflow ID:", workflowId);
+        
+        // Use the correct VAPI API format - pass workflowId directly as string
+        await vapi.start(workflowId as any, {
           variableValues: {
             username: userName,
             userid: userId,
@@ -152,6 +155,20 @@ const Agent = ({
       }
     } catch (error) {
       console.error("Error starting call:", error);
+      
+      // Log detailed error information
+      if (error instanceof Error) {
+        console.error("Error message:", error.message);
+        console.error("Error stack:", error.stack);
+      }
+      
+      // If it's a response error, log the response details
+      if (error && typeof error === 'object' && 'response' in error) {
+        const responseError = error as any;
+        console.error("Response status:", responseError.response?.status);
+        console.error("Response data:", responseError.response?.data);
+      }
+      
       setCallStatus(CallStatus.INACTIVE);
     }
   };
